@@ -1,0 +1,82 @@
+body {
+    font-family: 'Great Vibes', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fce4ec;
+}
+
+/* Postcard Container */
+.postcard {
+    width: 400px;
+    height: 250px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.front, .back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.8s;
+}
+
+.front {
+    background: #fffaf0;
+    font-size: 18px;
+    padding: 20px;
+}
+
+.back {
+    background: #ffccd5;
+    transform: rotateY(180deg);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.postcard.flipped .front {
+    transform: rotateY(180deg);
+}
+
+.postcard.flipped .back {
+    transform: rotateY(360deg);
+}
+
+/* Typewriter Poem Text */
+.typewriter-text {
+    font-size: 20px;
+    text-align: center;
+    width: 90%;
+}
+
+/* Secret Message Styling */
+#hiddenMessage {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.postcard.flipped #hiddenMessage {
+    opacity: 1;
+}
+@keyframes floatingHearts {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+.heart {
+    position: absolute;
+    color: #ff4d6d;
+    font-size: 20px;
+    text-shadow: 0px 0px 5px #ff99aa;
+    animation: floatingHearts 3s linear infinite;
+}
+.postcard:hover {
+    box-shadow: 0 0 100px rgba(248, 122, 141, 0.8); /* Soft pink glow */
+}
