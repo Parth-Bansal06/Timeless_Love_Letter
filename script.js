@@ -72,3 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+function startHearts() {
+    heartInterval = setInterval(createHeart, 500); // Start hearts every 0.5s
+}
