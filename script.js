@@ -15,32 +15,63 @@ document.addEventListener("DOMContentLoaded", () => {
     let lineIndex = 0;
     let charIndex = 0;
     const typewriterSound = new Audio("typewriter.mp3");
+    let heartInterval;
 
-    function playTypewriterSound() {
-        typewriterSound.loop = true;
-        typewriterSound.play();
+    // Function to create floating hearts
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 5000);
     }
 
-    function stopTypewriterSound() {
-        typewriterSound.pause();
-        typewriterSound.currentTime = 0;
-        typewriterSound.loop = false;
+    // Start the floating hearts
+    function startHearts() {
+        heartInterval = setInterval(createHeart, 500);
     }
 
-    function playBackgroundMusic() {
-        bgMusic.play().catch(error => {
-            console.log("Autoplay blocked. Music will play after user interaction.");
+    // Stop the floating hearts and form a flower
+    function stopHeartsAndFormFlower() {
+        clearInterval(heartInterval);
+
+        // Remove floating hearts
+        document.querySelectorAll(".heart").forEach((heart) => {
+            heart.style.animation = "none";
+            heart.style.position = "fixed";
+            heart.style.left = "50%";
+            heart.style.top = "50%";
+            heart.style.transform = "translate(-50%, -50%)";
+            heart.style.fontSize = "40px";
+            heart.style.textShadow = "0px 0px 10px pink";
         });
+
+        // After 1 second, replace hearts with a flower
+        setTimeout(() => {
+            document.querySelectorAll(".heart").forEach((heart) => heart.remove());
+
+            const flower = document.createElement("div");
+            flower.innerHTML = "🌸";
+            flower.style.position = "fixed";
+            flower.style.left = "75%";
+            flower.style.top = "80%";
+            flower.style.transform = "translate(-50%, -50%) scale(2)";
+            flower.style.fontSize = "100px";
+            flower.style.color = "#ff4d6d";
+            flower.style.textShadow = "0px 0px 15px #ff99aa, 0px 0px 30px #ff4d6d";
+            document.body.appendChild(flower);
+        }, 1000);
     }
 
-    document.addEventListener("click", () => {
-        playBackgroundMusic(); // Start music on first click
-    }, { once: true });
-
+    // Type the poem line by line
     function typePoem() {
         if (lineIndex === 0 && charIndex === 0) {
+            bgMusic.play().catch((error) => console.log("Music play issue:", error));
             playTypewriterSound();
-            startHearts();
+            startHearts(); // Start floating hearts
         }
 
         if (lineIndex < poem.length) {
@@ -56,14 +87,29 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             stopTypewriterSound();
-            stopHeartsAndFormFlower();
+            stopHeartsAndFormFlower(); // Stop hearts and form a flower
         }
     }
 
+    // Typewriter sound
+    function playTypewriterSound() {
+        typewriterSound.loop = true;
+        typewriterSound.play();
+    }
+
+    function stopTypewriterSound() {
+        typewriterSound.pause();
+        typewriterSound.currentTime = 0;
+    }
+
+    // Start the poem
     typePoem();
 
+    // Flip postcard on click
     postcard.addEventListener("click", () => {
         postcard.classList.toggle("flipped");
+
+        // Show message only when flipped
         if (postcard.classList.contains("flipped")) {
             hiddenMessage.style.opacity = "1";
             hiddenMessage.textContent = "I’m glad you opened this. You make my heart flutter.";
@@ -71,7 +117,9 @@ document.addEventListener("DOMContentLoaded", () => {
             hiddenMessage.style.opacity = "0";
         }
     });
+
+    // Play background music only after user interaction
+    document.body.addEventListener("click", () => {
+        bgMusic.play().catch((error) => console.error("Audio play failed:", error));
+    });
 });
-function startHearts() {
-    heartInterval = setInterval(createHeart, 500); // Start hearts every 0.5s
-}
